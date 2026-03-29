@@ -1,0 +1,4 @@
+scenario,panel_area_m2,panel_weight_per_m2,load_per_panel_m2_kg,load_per_roof_m2_kg,gcr,total_roof_area_m2,usable_roof_area_m2,max_panel_area_m2,max_panels,max_system_kwp,target_kwp,target_panels,target_panel_area_m2,target_roof_load_kg_m2,structural_limit_kg_m2,is_500kwp_feasible,binding_constraint
+Conservative,2.5833,7.55,17.05,7.67,0.45,8000,5600.0,2520.0,975,565.5,500,862,2227.0,6.78,15.0,True,roof area
+Base Case,2.5833,7.55,15.55,7.0,0.45,8000,6000.0,2700.0,1045,606.1,500,862,2227.0,5.77,15.0,True,roof area
+Optimistic,2.5833,7.55,14.05,6.32,0.45,8000,6400.0,2880.0,1114,646.1,500,862,2227.0,4.89,15.0,True,roof area
