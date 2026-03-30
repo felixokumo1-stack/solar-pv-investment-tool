@@ -226,11 +226,33 @@ pip install -r requirements.txt
 ## 🔮 Planned Extensions (v2.0)
 
 - [ ] **BESS Integration** — Battery dispatch model for increased
-      self-consumption optimisation
-- [ ] **Multi-site comparison** — Compare multiple rooftop locations
-- [ ] **Jupyter notebooks** — Narrative walkthrough of full methodology
-- [ ] **Unit tests** — Pytest suite for all financial model functions
-- [ ] **CI/CD** — GitHub Actions workflow for automated testing
+      self-consumption optimisation. Hourly charge/discharge logic,
+      degradation modelling, and incremental NPV analysis.
+
+- [ ] **PPA vs Ownership Analysis** — Comparative financial model
+      between outright ownership (current model) and a Power Purchase
+      Agreement (PPA / Mieterstrom structure). Evaluates NPV, risk
+      profile, balance sheet impact, and flexibility trade-offs for
+      the building owner under EEG 2023 and German corporate PPA
+      frameworks.
+
+- [ ] **Life Cycle Assessment (LCA)** — Full cradle-to-grave
+      environmental analysis covering embodied carbon, energy payback
+      period, CO₂ abatement over 20 years, and end-of-life recycling.
+      Aligned with ISO 14040/14044 methodology and the Circular
+      Process Engineering principles of the host institution (RUB).
+
+- [ ] **Multi-site Comparison** — Extend the tool to compare multiple
+      rooftop locations across NRW with automated site ranking.
+
+- [ ] **Jupyter Notebooks** — Narrative walkthrough of the full
+      methodology for academic and teaching audiences.
+
+- [ ] **Unit Tests** — Pytest suite for all financial model functions
+      ensuring reproducibility and robustness.
+
+- [ ] **CI/CD Pipeline** — GitHub Actions workflow for automated
+      testing on every commit.
 
 ---
 
