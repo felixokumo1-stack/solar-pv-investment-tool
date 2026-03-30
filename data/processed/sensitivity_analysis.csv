@@ -1,0 +1,11 @@
+parameter,npv_eur,npv_delta,irr_pct,payback_yr,go_verdict
+CAPEX (+20%),465273.0,-72450.0,15.82,6.2,True
+CAPEX (-20%),610173.0,72450.0,23.23,4.4,True
+Electricity Price (+15%),674514.0,136791.0,21.78,4.6,True
+Electricity Price (-15%),400933.0,-136790.0,15.98,6.1,True
+Self-Consumption (70%),643683.0,105960.0,21.08,4.8,True
+Self-Consumption (50%),431766.0,-105957.0,16.71,5.9,True
+Degradation (0.2%/yr),555526.0,17803.0,19.16,5.2,True
+Degradation (0.6%/yr),520310.0,-17413.0,18.7,5.3,True
+Discount Rate (4%),720228.0,182505.0,18.94,5.3,True
+Discount Rate (8%),396348.0,-141375.0,18.94,5.3,True

@@ -1,0 +1,4 @@
+scenario,description,capex_eur,npv_eur,irr_pct,lcoe_ct_kwh,payback_years,verdict
+Bear Case,"Higher costs, lower prices, conservative yield",461738.0,144997.0,11.9,12.27,7.7,GO
+Base Case,Central estimates — primary model,407400.0,537723.0,18.94,9.84,5.3,GO
+Bull Case,"Lower costs, higher prices, optimistic yield",371175.0,961951.0,26.82,8.64,3.8,GO
