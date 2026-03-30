@@ -4,6 +4,9 @@
 [![pvlib](https://img.shields.io/badge/pvlib-0.15.0-orange)](https://pvlib-python.readthedocs.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Complete-brightgreen)]()
+[![Live Dashboard](https://img.shields.io/badge/Live%20Dashboard-View%20Report-2563EB?style=flat&logo=netlify&logoColor=white)](https://felix-pv-investment-dashboard.netlify.app/)
+
+> 🔗 **[View Live Investment Dashboard →](https://felix-pv-investment-dashboard.netlify.app/)**
 
 A **reproducible, data-driven investment decision tool** for a 500 kWp commercial
 rooftop PV system in Bochum, NRW, Germany — modelled under EEG 2023 regulations
