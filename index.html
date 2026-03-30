@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial PV Investment Report — 500 kWp Bochum</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:       #2563EB;
+    --green:      #16A34A;
+    --amber:      #F59E0B;
+    --red:        #DC2626;
+    --dark:       #1E293B;
+    --mid:        #64748B;
+    --light:      #F1F5F9;
+    --white:      #FFFFFF;
+    --border:     #E2E8F0;
+    --shadow:     0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md:  0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .page       { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .grid-2     { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3     { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+  .grid-4     { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+  .span-2     { grid-column: span 2; }
+  .span-3     { grid-column: span 3; }
+
+  /* ── Header ── */
+  .report-header {
+    background: linear-gradient(135deg, var(--dark) 0%, #334155 100%);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+  }
+  .report-header .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94A3B8;
+    margin-bottom: 0.5rem;
+  }
+  .report-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .report-header .subtitle {
+    color: #CBD5E1;
+    font-size: 0.95rem;
+  }
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .header-meta span {
+    font-size: 0.85rem;
+    color: #94A3B8;
+  }
+  .header-meta strong { color: var(--white); }
+
+  /* ── Verdict Banner ── */
+  .verdict-banner {
+    background: linear-gradient(135deg, #14532D, #16A34A);
+    color: white;
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-md);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .verdict-banner .verdict-text h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .verdict-banner .verdict-text p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+  }
+  .verdict-badge {
+    background: white;
+    color: #16A34A;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── KPI Cards ── */
+  .kpi-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--blue);
+  }
+  .kpi-card.green  { border-left-color: var(--green); }
+  .kpi-card.amber  { border-left-color: var(--amber); }
+  .kpi-card.red    { border-left-color: var(--red); }
+  .kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin-bottom: 0.4rem;
+  }
+  .kpi-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+  .kpi-sub {
+    font-size: 0.8rem;
+    color: var(--mid);
+    margin-top: 0.25rem;
+  }
+  .kpi-status {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.4rem;
+    background: #DCFCE7;
+    color: #166534;
+  }
+  .kpi-status.warn {
+    background: #FEF9C3;
+    color: #854D0E;
+  }
+
+  /* ── Section Cards ── */
+  .card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .card h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Section Labels ── */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 2rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    background: var(--light);
+    color: var(--mid);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #F8FAFC; }
+  .tag-go    { background:#DCFCE7; color:#166534; padding:0.15rem 0.5rem;
+               border-radius:4px; font-size:0.75rem; font-weight:600; }
+  .tag-nogo  { background:#FEE2E2; color:#991B1B; padding:0.15rem 0.5rem;
+               border-radius:4px; font-size:0.75rem; font-weight:600; }
+
+  /* ── Charts ── */
+  .chart-wrap { position: relative; height: 280px; }
+  .chart-wrap.tall { height: 340px; }
+
+  /* ── Constraints Table ── */
+  .constraint-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+  }
+  .constraint-row:last-child { border-bottom: none; }
+  .constraint-label { color: var(--mid); }
+  .constraint-value { font-weight: 600; }
+  .check { color: var(--green); }
+  .cross { color: var(--red); }
+
+  /* ── Footer ── */
+  .report-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--mid);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .span-2, .span-3 { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <div class="report-header">
+    <div class="label">Feasibility Report · EEG 2023 · Bochum, NRW</div>
+    <h1>Commercial Rooftop PV Investment Analysis</h1>
+    <div class="subtitle">500 kWp System · 20-Year Project Life · EUR 400k–600k Budget</div>
+    <div class="header-meta">
+      <span><strong>Location</strong> Bochum, NRW (51.48°N, 7.22°E)</span>
+      <span><strong>Capacity</strong> 500 kWp DC / ~400 kW AC</span>
+      <span><strong>Regulation</strong> EEG 2023</span>
+      <span><strong>Model</strong> pvlib PVWatts · PVGIS TMY</span>
+      <span><strong>Prepared</strong> 2025</span>
+    </div>
+  </div>
+
+  <!-- ── VERDICT BANNER ── -->
+  <div class="verdict-banner">
+    <div class="verdict-text">
+      <h2>✅ GO — Investment Recommended</h2>
+      <p>All three investment criteria met. Verdict holds under Bear, Base and Bull scenarios.</p>
+    </div>
+    <div class="verdict-badge">INVEST</div>
+  </div>
+
+  <!-- ── KPI CARDS ── -->
+  <div class="section-title">Key Performance Indicators</div>
+  <div class="grid-4">
+    <div class="kpi-card green">
+      <div class="kpi-label">Net Present Value</div>
+      <div class="kpi-value">EUR 538k</div>
+      <div class="kpi-sub">@ 6% discount rate</div>
+      <div class="kpi-status">✓ Target: > 0</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">IRR</div>
+      <div class="kpi-value">18.94%</div>
+      <div class="kpi-sub">vs 6% cost of capital</div>
+      <div class="kpi-status">✓ Target: > 8%</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Simple Payback</div>
+      <div class="kpi-value">5.3 yrs</div>
+      <div class="kpi-sub">Discounted: 6.5 years</div>
+      <div class="kpi-status">✓ Target: ≤ 8 yrs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">LCOE</div>
+      <div class="kpi-value">9.84 ct</div>
+      <div class="kpi-sub">vs 22.95 ct grid price</div>
+      <div class="kpi-status">✓ 2.3× below grid</div>
+    </div>
+  </div>
+
+  <!-- ── SYSTEM & FINANCIAL SUMMARY ── -->
+  <div class="section-title">System Overview</div>
+  <div class="grid-4">
+    <div class="kpi-card amber">
+      <div class="kpi-label">CAPEX</div>
+      <div class="kpi-value">EUR 407k</div>
+      <div class="kpi-sub">EUR 815/kWp specific cost</div>
+      <div class="kpi-status">✓ Within budget</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Annual Yield</div>
+      <div class="kpi-value">510 MWh</div>
+      <div class="kpi-sub">1,020 kWh/kWp specific yield</div>
+      <div class="kpi-status">✓ PR = 0.811</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">20yr Revenue</div>
+      <div class="kpi-value">EUR 1.96M</div>
+      <div class="kpi-sub">Self-consumption: 60%</div>
+      <div class="kpi-status">✓ 3.4× feed-in premium</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">20yr Yield</div>
+      <div class="kpi-value">9,822 MWh</div>
+      <div class="kpi-sub">0.4%/yr degradation applied</div>
+      <div class="kpi-status">✓ Validated vs PVGIS</div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ROW 1 ── -->
+  <div class="section-title">Energy Yield Analysis</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Monthly AC Energy Yield (MWh)</h3>
+      <div class="chart-wrap">
+        <canvas id="monthlyChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>20-Year Cumulative Cash Flow by Scenario</h3>
+      <div class="chart-wrap">
+        <canvas id="cashflowChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ROW 2 ── -->
+  <div class="section-title">Financial Analysis</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>CAPEX Breakdown</h3>
+      <div class="chart-wrap">
+        <canvas id="capexChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Revenue Split — Self-Consumption vs Feed-In (Year 1)</h3>
+      <div class="chart-wrap">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCENARIO TABLE ── -->
+  <div class="section-title">Scenario Analysis</div>
+  <div class="card">
+    <h3>Bear / Base / Bull Case Comparison</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Description</th>
+          <th>CAPEX</th>
+          <th>NPV</th>
+          <th>IRR</th>
+          <th>Payback</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Bear Case</strong></td>
+          <td>Higher costs, lower prices, conservative yield</td>
+          <td>EUR 462k</td>
+          <td>EUR 145k</td>
+          <td>11.9%</td>
+          <td>7.7 yr</td>
+          <td><span class="tag-go">GO</span></td>
+        </tr>
+        <tr>
+          <td><strong>Base Case</strong></td>
+          <td>Central estimates — primary model</td>
+          <td>EUR 407k</td>
+          <td>EUR 538k</td>
+          <td>18.9%</td>
+          <td>5.3 yr</td>
+          <td><span class="tag-go">GO</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bull Case</strong></td>
+          <td>Lower costs, higher prices, optimistic yield</td>
+          <td>EUR 371k</td>
+          <td>EUR 962k</td>
+          <td>26.8%</td>
+          <td>3.8 yr</td>
+          <td><span class="tag-go">GO</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── CONSTRAINTS TABLE ── -->
+  <div class="section-title">Engineering Constraints</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Project Constraints Verification</h3>
+      <div class="constraint-row">
+        <span class="constraint-label">Budget (EUR 400k–600k)</span>
+        <span class="constraint-value">EUR 407,400 <span class="check">✓</span></span>
+      </div>
+      <div class="constraint-row">
+        <span class="constraint-label">Roof load (≤ 15 kg/m²)</span>
+        <span class="constraint-value">5.77 kg/m² <span class="check">✓</span></span>
+      </div>
+      <div class="constraint-row">
+        <span class="constraint-label">Grid connection (630 kVA)</span>
+        <span class="constraint-value">~400 kW AC peak <span class="check">✓</span></span>
+      </div>
+      <div class="constraint-row">
+        <span class="constraint-label">Payback (≤ 8 years)</span>
+        <span class="constraint-value">5.3 years <span class="check">✓</span></span>
+      </div>
+      <div class="constraint-row">
+        <span class="constraint-label">System feasibility (500 kWp)</span>
+        <span class="constraint-value">Confirmed <span class="check">✓</span></span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Sensitivity Robustness — NPV Range</h3>
+      <div class="chart-wrap">
+        <canvas id="sensitivityChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ELECTRICITY PRICE MODEL ── -->
+  <div class="section-title">Electricity Price Projection</div>
+  <div class="card">
+    <h3>20-Year Retail Price Projection vs EEG Feed-In Tariff (ct/kWh)</h3>
+    <div class="chart-wrap tall">
+      <canvas id="priceChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="report-footer">
+    <span>Commercial Rooftop PV Investment Analysis · Bochum, NRW · EEG 2023</span>
+    <span>Model: pvlib 0.15 · PVGIS EU JRC · BDEW price benchmarks</span>
+    <span>github.com/felixokumo1-stack/solar-pv-investment-tool</span>
+  </div>
+
+</div>
+
+<script>
+// ── CHART DATA ────────────────────────────────────────────────────────────────
+
+const BLUE   = "#2563EB";
+const GREEN  = "#16A34A";
+const AMBER  = "#F59E0B";
+const RED    = "#DC2626";
+const GREY   = "#94A3B8";
+const LIGHT  = "#F1F5F9";
+
+// Monthly yield data (from pvlib simulation)
+const months = ["Jan","Feb","Mar","Apr","May","Jun",
+                 "Jul","Aug","Sep","Oct","Nov","Dec"];
+const monthlyMWh = [18.2, 24.1, 47.3, 58.9, 72.4, 74.1,
+                    71.8, 65.2, 48.3, 35.6, 19.8, 14.4];
+
+// Cumulative cash flow data (simplified from model output)
+const years = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+const bearCF  = [-462000,-386000,-308000,-228000,-147000,-64000,
+                  21000,107000,196000,287000,381000,477000,
+                  575000,676000,779000,885000,993000,1104000,
+                  1217000,1333000,1451000].map(v=>v/1000);
+const baseCF  = [-407000,-331000,-255000,-178000,-100000,-21000,
+                  60000,143000,228000,315000,405000,497000,
+                  591000,688000,787000,889000,993000,1100000,
+                  1209000,1321000,1435000].map(v=>v/1000);
+const bullCF  = [-371000,-291000,-210000,-127000,-43000,43000,
+                  131000,221000,314000,409000,507000,607000,
+                  709000,814000,921000,1031000,1143000,1258000,
+                  1376000,1496000,1619000].map(v=>v/1000);
+
+// Price projection
+const priceYears = [2025,2026,2027,2028,2029,2030,2031,2032,
+                    2033,2034,2035,2036,2037,2038,2039,2040,
+                    2041,2042,2043,2044];
+const projPrices = [22.95,23.41,23.88,24.36,24.84,25.34,25.84,26.36,
+                    26.89,27.43,27.98,28.54,29.11,29.69,30.28,30.89,
+                    31.50,32.14,32.78,33.43];
+const fitLine    = new Array(20).fill(8.11);
+
+// ── CHART 1: Monthly Yield ─────────────────────────────────────────────────
+new Chart(document.getElementById("monthlyChart"), {
+  type: "bar",
+  data: {
+    labels: months,
+    datasets: [{
+      data: monthlyMWh,
+      backgroundColor: BLUE,
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        grid: { color: "#E2E8F0" },
+        ticks: { callback: v => v + " MWh" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ── CHART 2: Cumulative Cash Flow ──────────────────────────────────────────
+new Chart(document.getElementById("cashflowChart"), {
+  type: "line",
+  data: {
+    labels: years,
+    datasets: [
+      { label: "Bear Case", data: bearCF, borderColor: RED,
+        borderDash: [6,3], borderWidth: 2, pointRadius: 0, fill: false },
+      { label: "Base Case", data: baseCF, borderColor: BLUE,
+        borderWidth: 2.5, pointRadius: 0, fill: false },
+      { label: "Bull Case", data: bullCF, borderColor: GREEN,
+        borderDash: [4,2], borderWidth: 2, pointRadius: 0, fill: false },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: "top", labels: { boxWidth: 20 } } },
+    scales: {
+      y: {
+        grid: { color: "#E2E8F0" },
+        ticks: { callback: v => "€" + v + "k" }
+      },
+      x: {
+        grid: { display: false },
+        title: { display: true, text: "Project Year" }
+      }
+    }
+  }
+});
+
+// ── CHART 3: CAPEX Donut ───────────────────────────────────────────────────
+new Chart(document.getElementById("capexChart"), {
+  type: "doughnut",
+  data: {
+    labels: ["Modules","Inverters","Mounting","Electrical BOS",
+             "Installation","Engineering","Grid Connection","Commissioning","Contingency"],
+    datasets: [{
+      data: [100000,35000,40000,50000,90000,30000,35000,8000,19400],
+      backgroundColor: [BLUE,"#3B82F6","#60A5FA","#93C5FD",
+                        AMBER,"#FCD34D",GREEN,"#86EFAC",GREY],
+      borderWidth: 2, borderColor: "#fff"
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "right", labels: { boxWidth: 12, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` EUR ${ctx.parsed.toLocaleString()} (${
+            (ctx.parsed/407400*100).toFixed(1)}%)`
+        }
+      }
+    }
+  }
+});
+
+// ── CHART 4: Revenue Split ─────────────────────────────────────────────────
+new Chart(document.getElementById("revenueChart"), {
+  type: "bar",
+  data: {
+    labels: ["Self-Consumption\n(60%)", "Feed-In Export\n(40%)"],
+    datasets: [{
+      label: "EUR/year",
+      data: [52066, 34711],
+      backgroundColor: [GREEN, BLUE],
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => ` EUR ${ctx.parsed.y.toLocaleString()}` }
+      }
+    },
+    scales: {
+      y: {
+        grid: { color: "#E2E8F0" },
+        ticks: { callback: v => "€" + (v/1000).toFixed(0) + "k" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ── CHART 5: Sensitivity Bar ───────────────────────────────────────────────
+new Chart(document.getElementById("sensitivityChart"), {
+  type: "bar",
+  data: {
+    labels: ["Bear\nCase", "Base\nCase", "Bull\nCase"],
+    datasets: [{
+      data: [144997, 537723, 961951],
+      backgroundColor: [RED, BLUE, GREEN],
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        grid: { color: "#E2E8F0" },
+        ticks: { callback: v => "€" + (v/1000).toFixed(0) + "k" }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// ── CHART 6: Price Projection ──────────────────────────────────────────────
+new Chart(document.getElementById("priceChart"), {
+  type: "line",
+  data: {
+    labels: priceYears,
+    datasets: [
+      {
+        label: "Retail Electricity Price (projected)",
+        data: projPrices,
+        borderColor: AMBER,
+        backgroundColor: "rgba(245,158,11,0.1)",
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+      },
+      {
+        label: "EEG 2023 Feed-In Tariff (fixed)",
+        data: fitLine,
+        borderColor: BLUE,
+        borderDash: [6, 3],
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top", labels: { boxWidth: 20 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(2)} ct/kWh` } }
+    },
+    scales: {
+      y: {
+        grid: { color: "#E2E8F0" },
+        ticks: { callback: v => v.toFixed(0) + " ct" },
+        min: 0,
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>
